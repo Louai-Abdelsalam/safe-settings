@@ -1,4 +1,7 @@
-org: yadhav
+# https://www.serverless.com/framework/docs/providers/aws/guide/serverless.yml
+
+# Do not add the `org` root key, since we don't wanna use the serverless dashboard which requires login:
+# https://github.com/serverless/serverless/issues/6230#issuecomment-519841982
 app: safe-settings
 service: safe-settings
 frameworkVersion: '3'
@@ -7,10 +10,10 @@ provider:
   name: aws
   runtime: nodejs20.x
   lambdaHashingVersion: 20201221
+  iam:
+    role: WebhookLambdaRole
   environment:
     APP_ID: ${param:APP_ID}
-    PRIVATE_KEY: ${param:PRIVATE_KEY}
-    WEBHOOK_SECRET: ${param:WEBHOOK_SECRET}
     NODE_ENV: production
     LOG_LEVEL: debug
 
@@ -33,3 +36,48 @@ functions:
           rate: rate(4 hours)
           enabled: true # set to true to auto-enable
           input: {}
+
+# https://www.serverless.com/framework/docs/providers/aws/guide/resources
+resources:
+  Resources:
+    SafeSettingsPrivateKey:
+      Type: AWS::SecretsManager::Secret
+      Properties:
+        Description: private key for the safe settings application
+        Name: safe-settings-private-key
+        SecretString: ${param:PRIVATE_KEY}
+        Tags: 
+          - Key: billing_reference
+            Value: safe-settings
+    SafeSettingsWebhookSecret:
+      Type: AWS::SecretsManager::Secret
+      Properties:
+        Description: webhook secret for the safe settings application
+        Name: safe-settings-webhook-secret
+        SecretString: ${param:WEBHOOK_SECRET}
+        Tags: 
+          - Key: billing_reference
+            Value: safe-settings
+    WebhookLambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: SafeSettingsWebhookLambdaRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: grabSecrets
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:GetSecretValue
+                  Resource:
+                    - !Sub arn:aws:secretsmanager:us-east-1:${AWS::AccountId}:secret:safe-settings-private-key*
+                    - !Sub arn:aws:secretsmanager:us-east-1:${AWS::AccountId}:secret:safe-settings-webhook-secret*

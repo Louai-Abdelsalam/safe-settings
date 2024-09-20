@@ -1,4 +1,21 @@
 /* eslint-disable camelcase */
+const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
+
+await Promise.resolve(
+  console.log("about to get secrets ...");
+  const client = new SecretsManagerClient();
+  
+  const getPrivateKeyCommand = new GetSecretValueCommand({ SecretId: "safe-settings-private-key"});
+  const getPrivateKeyResponse = await client.send(getPrivateKeyCommand);
+  process.env['PRIVATE_KEY'] = getPrivateKeyResponse.SecretString;
+  console.log(process.env['PRIVATE_KEY']);
+  
+  const getWebhookSecretCommand = new GetSecretValueCommand({ SecretId: "safe-settings-webhook-secret"});
+  const getWebhookSecretResponse = await client.send(getWebhookSecretCommand);
+  process.env['WEBHOOK_SECRET'] = getWebhookSecretResponse.SecretString;
+  console.log(process.env['WEBHOOK_SECRET']);
+);
+
 const yaml = require('js-yaml')
 const fs = require('fs')
 const cron = require('node-cron')
