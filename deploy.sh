@@ -27,5 +27,5 @@ fi
 # echo "bash -c \"serverless package $deploy_cmd_flags\""
 # bash -c "serverless package $deploy_cmd_flags"
 
-# echo "bash -c \"serverless deploy $deploy_cmd_flags\""
-bash -c "serverless deploy $deploy_cmd_flags"
+echo "bash -c \"serverless deploy $deploy_cmd_flags\""
+# bash -c "serverless deploy $deploy_cmd_flags"
