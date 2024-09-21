@@ -7,11 +7,12 @@ const {
 
 const appFn = require('./')
 
-module.exports.webhooks = async () => {
+module.exports.webhooks = async (event, context, callback) => {
   await setSecretsEnvVars();
-  return createLambdaFunction(appFn, {
+  const lambdaFunction = createLambdaFunction(appFn, {
     probot: createProbot()
-  })
+  });
+  return lambdaFunction(event, context);
 }
 
 module.exports.scheduler = async function () {
