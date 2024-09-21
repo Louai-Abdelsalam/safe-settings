@@ -94,3 +94,6 @@ resources:
                   Action:
                     - logs:PutLogEvents
                   Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${self:service}-${sls:stage}*:*:*
+        Tags:
+          - Key: billing_reference
+            Value: safe-settings
