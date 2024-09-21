@@ -1,4 +1,4 @@
-# Instructions to Upgrade & Deploy Safe-Settings to a New Version
+# Instructions to Upgrade Safe-Settings to a New Version & Deploy it
 
 1. Sync this fork's `main-enterprise` branch with the original repo's `main-enterprise` branch at the commit that matches the version you'd like to upgrade to.
 
