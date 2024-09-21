@@ -9,7 +9,7 @@ const appFn = require('./')
 
 module.exports.webhooks = async () => {
   await setSecretsEnvVars();
-  createLambdaFunction(appFn, {
+  return createLambdaFunction(appFn, {
     probot: createProbot()
   })
 }
