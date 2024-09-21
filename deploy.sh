@@ -1,14 +1,16 @@
 #!/bin/bash -e
 
-# npm install --global serverless@3.39.0
+npm install --global serverless@3.39.0
 
-# npm install --omit=dev
+# NOTE: that '@aws-sdk/client-secrets-manager' is not in package.json because lambdas already have
+# the AWS SDK installed by default.
+npm install --omit=dev
 
 deploy_cmd_flags="--stage prod"
 
 if [[ -f 'secrets.json' ]]; then
-    # sudo apt-get update
-    # sudo apt-get install jq
+    sudo apt-get update
+    sudo apt-get install jq
 
     app_id="$(jq --exit-status --raw-output '.app_id' secrets.json)"
     webhook_secret="$(jq --exit-status --raw-output '.webhook_secret' secrets.json)"
@@ -24,8 +26,4 @@ else
     exit 1
 fi
 
-# echo "bash -c \"serverless package $deploy_cmd_flags\""
-# bash -c "serverless package $deploy_cmd_flags"
-
-echo "bash -c \"serverless deploy $deploy_cmd_flags\""
-# bash -c "serverless deploy $deploy_cmd_flags"
+bash -c "serverless deploy $deploy_cmd_flags"
