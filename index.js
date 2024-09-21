@@ -1,60 +1,16 @@
 /* eslint-disable camelcase */
-// const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
-// // await Promise.resolve(console.log('🎉'));
-// console.log("about to get secrets ...");
-// const client = new SecretsManagerClient();
-// console.log("client created ...");
-// const getPrivateKeyCommand = new GetSecretValueCommand({ SecretId: "safe-settings-private-key"});
-// console.log("getPrivateKeyCommand created ...");
-// // client.send(getPrivateKeyCommand)
-// //   .then(getPrivateKeyResponse => {
-// //     console.log(process.env['PRIVATE_KEY']);
-// //     process.env['PRIVATE_KEY'] = getPrivateKeyResponse.SecretString;
-// //     console.log(process.env['PRIVATE_KEY']);
-// //   })
-// //   .catch(err => {
-// //     console.error(err);
-// //   });
-// ( async () => {
-//   const getPrivateKeyResponse = await client.send(getPrivateKeyCommand);
-//   console.log(process.env['PRIVATE_KEY']);
-//   process.env['PRIVATE_KEY'] = getPrivateKeyResponse.SecretString;
-//   console.log(process.env['PRIVATE_KEY']);
-//   throw new Error("Error from async anonymous function ...");
-// })();
-// console.log("after async anonymous function ...");
-
-// setTimeout(function(){
-//   console.log("afte waiting");
-//   console.log("PRIVATE_KEY set ...");
-//   console.log(process.env['PRIVATE_KEY']);
-// }, 5000);
-// // console.log("PRIVATE_KEY set ...");
-// // console.log(process.env['PRIVATE_KEY']);
-// const getWebhookSecretCommand = new GetSecretValueCommand({ SecretId: "safe-settings-webhook-secret"});
-// console.log("getWebhookSecretCommand created ...");
-// client.send(getWebhookSecretCommand)
-//   .then(getWebhookSecretResponse => {
-//     process.env['WEBHOOK_SECRET'] = getWebhookSecretResponse.SecretString;
-//     console.log(process.env['WEBHOOK_SECRET']);
-//   });
-// console.log("Set all env variables ...");
-
-// const yaml = require('js-yaml')
-// const fs = require('fs')
-// const cron = require('node-cron')
-// const Glob = require('./lib/glob')
-// const ConfigManager = require('./lib/configManager')
-// const NopCommand = require('./lib/nopcommand')
-// const env = require('./lib/env')
+const yaml = require('js-yaml')
+const fs = require('fs')
+const cron = require('node-cron')
+const Glob = require('./lib/glob')
+const ConfigManager = require('./lib/configManager')
+const NopCommand = require('./lib/nopcommand')
+const env = require('./lib/env')
 
 let deploymentConfig
 
 
 module.exports = (robot, { getRouter }, Settings = require('./lib/settings')) => {
-  console.log("inside module.exports ...");
-  // await Promise.resolve(console.log('🎉'));
-  // throw new Error("Error from module.exports ...");
   let appName = 'safe-settings'
   let appSlug = 'safe-settings'
   async function syncAllSettings (nop, context, repo = context.repo(), ref) {
