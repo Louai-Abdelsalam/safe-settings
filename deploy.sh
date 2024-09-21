@@ -20,7 +20,8 @@ if [[ -f 'secrets.json' ]]; then
     deploy_cmd_flags+=" --param=\"APP_ID=$app_id\" --param=\"WEBHOOK_SECRET=$webhook_secret\" --param=\"PRIVATE_KEY=$private_key\""
 
     printf -- "\n\nDeployment flags: '$deploy_cmd_flags'\n\n"
-# TODO: allow not passing secrets.json where secretsmanager secret is just not deployed/updated
+# TODO: accommodate not needing `secrets.json` without ending up deleting
+# the `serverless.yml`'s secretsmanager resources.
 else
     echo 'secrets.json not found!'
     exit 1
