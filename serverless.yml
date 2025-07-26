@@ -13,12 +13,21 @@ provider:
   # `NOTE: Make sure you increase the timeout for the Lambda function to the MAX (15 Mins).`
   # https://github.com/github/safe-settings/blob/2.1.13/docs/AWS-README.md
   timeout: 900
+  # https://www.serverless.com/framework/docs/providers/aws/guide/functions#tags
   tags:
+    Owner: labdelsalam
     billing_reference: safe-settings
   environment:
     APP_ID: ${param:APP_ID}
     NODE_ENV: production
     LOG_LEVEL: debug
+
+# https://www.serverless.com/framework/docs/providers/aws/guide/packaging#package-configuration
+package:
+  patterns:
+    - '!.github/**'
+    - '!secrets.json'
+    - '!deployment_*.patch'
 
 functions:
   webhooks:
@@ -52,6 +61,8 @@ resources:
         Tags: 
           - Key: billing_reference
             Value: safe-settings
+          - Key: Owner
+            Value: labdelsalam
     SafeSettingsWebhookSecret:
       Type: AWS::SecretsManager::Secret
       Properties:
@@ -61,6 +72,8 @@ resources:
         Tags: 
           - Key: billing_reference
             Value: safe-settings
+          - Key: Owner
+            Value: labdelsalam
   # https://www.serverless.com/framework/docs/providers/aws/guide/resources#override-aws-cloudformation-resource
   extensions:
     IamRoleLambdaExecution:
@@ -97,3 +110,5 @@ resources:
         Tags:
           - Key: billing_reference
             Value: safe-settings
+          - Key: Owner
+            Value: labdelsalam

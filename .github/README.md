@@ -1,12 +1,14 @@
 # Instructions to Upgrade Safe-Settings to a New Version & Deploy it
 
-1. Sync this fork's `main-enterprise` branch with the original repo's `main-enterprise` branch at the commit that matches the version you'd like to upgrade to.
+0. Deployment instructions can be different at whatever future version you're trying to deploy, so always make sure the following instructions are still compatible with the AWS deployment instructions on the https://github.com/github/safe-settings repo.
 
-2. Make a note of the applied patch, which you can see [here](https://github.com/Louai-Abdelsalam/safe-settings/compare/main-enterprise...Louai-Abdelsalam:safe-settings:deployment)
+1. Sync this fork's `main-enterprise` branch with the original repo's `main-enterprise` branch **at the commit that matches the version you'd like to upgrade to**.
+
+2. Make a note of the applied patch at the root of this repo, stored as `deployment_<deployed version>.patch`.
 
 3. pull this fork's `main-enterprise` branch into the `deployment` branch, but make sure to keep the patch when resolving any merge conflicts that result from the merge.
 
-4. make sure you have at the repo's root a `secrets.json` file with the following content:
+4. make sure you have at the repo's root a root-owned `secrets.json` file (with 600 perms) with the following content:
 ```
 {
     "app_id": <the id of the github app used by safe-settings>,
@@ -15,7 +17,9 @@
 }
 ```
 
-5. run `./deploy.sh`.
+5. export AWS Access Keys Environment Variables into the terminal.
+
+6. run `./deploy.sh`.
 
 NOTE: the AWS SDK libraries are not added to the `package.json` file because lambdas already have them.
-If you need to run tests locally (e.g with `serverless invoke --local`), make sure to install whatever AWS SDK libraries you need **one folder up** (node will still be able to find them). That way you don't accidentally modify the `package.json` file (and its lock file), and you also don't accidentally package said libraries later into the lambda's zip file and end up with an unnecessarily bloated zip file that could actually be larger than the max size that lambdas allow.
+If you need to run tests locally (e.g with `serverless invoke local --function <function name>`), make sure to install whatever AWS SDK libraries you need **one folder up** (node will still be able to find them) via `npm install @aws-sdk/client-secrets-manager`. That way you don't accidentally modify the `package.json` file (and its lock file), and you also don't accidentally package said libraries later into the lambda's zip file and end up with an unnecessarily bloated zip file that could actually be larger than the max size that lambdas allow.

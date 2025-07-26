@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+# make sure you use serverless version <4 because version 4+ require signup.
 npm install --global serverless@3.39.0
 
 # NOTE: that '@aws-sdk/client-secrets-manager' is not in package.json because lambdas already have
@@ -12,10 +13,10 @@ if [[ -f 'secrets.json' ]]; then
     sudo apt-get update
     sudo apt-get install jq
 
-    app_id="$(jq --exit-status --raw-output '.app_id' secrets.json)"
-    webhook_secret="$(jq --exit-status --raw-output '.webhook_secret' secrets.json)"
+    app_id="$(sudo jq --exit-status --raw-output '.app_id' secrets.json)"
+    webhook_secret="$(sudo jq --exit-status --raw-output '.webhook_secret' secrets.json)"
     # extract as single line to later render it into the serverless template
-    private_key="$(jq --exit-status '.private_key' secrets.json | sed --expression 's/\"//g')"
+    private_key="$(sudo jq --exit-status '.private_key' secrets.json | sed --expression 's/\"//g')"
     # https://www.serverless.com/framework/docs/guides/parameters
     deploy_cmd_flags+=" --param=\"APP_ID=$app_id\" --param=\"WEBHOOK_SECRET=$webhook_secret\" --param=\"PRIVATE_KEY=$private_key\""
 
@@ -28,3 +29,5 @@ else
 fi
 
 bash -c "serverless deploy $deploy_cmd_flags"
+# TESTING:
+# bash -c "sudo serverless invoke local --function <function name> $deploy_cmd_flags"
